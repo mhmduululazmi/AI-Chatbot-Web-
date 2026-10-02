@@ -1,0 +1,116 @@
+{
+  "name": "Tugas Pertemuan 1",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "\nHalo! 👋 Selamat datang di Toko Sepatu Kami. Ada yang bisa kami bantu mengenai produk Sneakers Casual, harga, pengiriman, atau pembayaran?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "288e9f32-b0e9-441a-9fbb-1c88831895dc",
+      "name": "When chat message received",
+      "webhookId": "e63e47ca-1746-4122-bfff-2cbf9de29714"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Garis Besar\nAnda seorang spesialis layanan pelanggan virtual dari Toko Sepatu Kami.\nTugas Anda membantu menjawab pertanyaan yang berkaitan dengan Toko Sepatu Kami sesuai dengan Dasar Pengetahuan Produk di bawah ini.\n\n# Dasar Pengetahuan Produk\n- Produk & Bahan: Sneakers Casual (Bahan Mesh & Kain Kanvas berkualitas, ringan dan bernapas).\n- Ukuran Produk: EU 38, 39, 40, 41, 42, 43, 44, 45.\n- Harga Produk: Rp250.000 / pasang.\n- Pengiriman: Ekspedisi JNE, J&T, dan SiCepat. Estimasi pengiriman 2-4 hari kerja. Gratis ongkir untuk minimal belanja Rp300.000.\n- Pembayaran: Transfer Bank (BCA, Mandiri), QRIS, e-Wallet (GoPay, OVO), dan COD (Bayar di Tempat).\n- Jam Layanan: Senin - Sabtu, pukul 08.00 - 20.00 WIB.\n\n# Aturan\nAnda harus merespons dengan cara yang ramah, sopan, dan jelas. Jika tidak ada informasi yang dapat diambil dari Dasar Pengetahuan Produk di atas, jangan mengarang jawaban. Anda dapat jujur menjawab, \"Maaf, informasi tersebut belum tersedia. Silakan hubungi Admin via WhatsApp di nomor 088292189773.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "d357495e-e6ab-4417-b6d6-c41b4f1d61f6",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "7997d3f5-663c-4224-b0e8-2fd8ff68ca7e",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        208
+      ],
+      "id": "3575540c-6ace-41f7-a6b9-f65c7fb970c7",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VIRBgUY69TMJWyiD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "384839d4-e3e2-4a20-b867-6273bfb3eac8",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f279b7f9e2a4d152a1767bca5de57e3a2319e51cc8e58ff5235ea8f63d93868e"
+  },
+  "nodeGroups": [],
+  "id": "Fh70Wt89EUQErRAj",
+  "tags": []
+}
