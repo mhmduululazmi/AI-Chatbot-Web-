@@ -1,0 +1,160 @@
+{
+  "name": "Tugas Pertemuan 3",
+  "nodes": [
+    {
+      "parameters": {
+        "public": true,
+        "initialMessages": "Halo! 👋 Selamat datang di Toko Sepatu Kami. Ada yang bisa kami bantu mengenai produk Sneekers Casual, harga, pengiriman, atau pembayaran?",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.5,
+      "position": [
+        0,
+        0
+      ],
+      "id": "4e45cc32-4517-4549-8c5b-e39d493b1c16",
+      "name": "When chat message received",
+      "webhookId": "07ab5b62-40e8-4251-a1d8-73f0f699402b"
+    },
+    {
+      "parameters": {
+        "options": {
+          "systemMessage": "## Garis Besar\nAnda seorang spesialis layanan pelanggan virtual dari Toko Sepatu Kami.\nTugas Anda membantu menjawab pertanyaan yang berkaitan dengan Toko Sepatu Kami sesuai dengan Dasar Pengetahuan Produk di bawah ini.\n\n# Dasar Pengetahuan Produk\n- Produk & Bahan: Sneakers Casual (Bahan Mesh & Kain Kanvas berkualitas, ringan dan bernapas).\n- Ukuran Produk: EU 38, 39, 40, 41, 42, 43, 44, 45.\n- Harga Produk: Rp250.000 / pasang.\n- Pengiriman: Ekspedisi JNE, J&T, dan SiCepat. Estimasi pengiriman 2-4 hari kerja. Gratis ongkir untuk minimal belanja Rp300.000.\n- Pembayaran: Transfer Bank (BCA, Mandiri), QRIS, e-Wallet (GoPay, OVO), dan COD (Bayar di Tempat).\n- Jam Layanan: Senin - Sabtu, pukul 08.00 - 20.00 WIB.\n\n# Aturan\nAnda harus merespons dengan cara yang ramah, sopan, dan jelas. Jika tidak ada informasi yang dapat diambil dari Dasar Pengetahuan Produk di atas, jangan mengarang jawaban. Anda dapat jujur menjawab, \"Maaf, informasi tersebut belum tersedia. Silakan hubungi Admin via WhatsApp di nomor 088292189773.\""
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        224,
+        0
+      ],
+      "id": "b86ad365-3c0e-4ceb-8b96-bf94129204f5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "modelName": "models/gemini-3.1-flash-lite",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1.2,
+      "position": [
+        96,
+        208
+      ],
+      "id": "2b0b4f56-afa7-42b2-9307-219f76e01996",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "VIRBgUY69TMJWyiD",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.4,
+      "position": [
+        240,
+        208
+      ],
+      "id": "bc7907fc-b7fb-468b-8fa4-900b3a3e0168",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1C9yBlGs5I-grDRPwhbt2H7hFQFiuBt-ngvx22A8KAGM",
+          "mode": "list",
+          "cachedResultName": "Data_Toko_Sepatu",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1C9yBlGs5I-grDRPwhbt2H7hFQFiuBt-ngvx22A8KAGM/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Sheet1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1C9yBlGs5I-grDRPwhbt2H7hFQFiuBt-ngvx22A8KAGM/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.7,
+      "position": [
+        384,
+        208
+      ],
+      "id": "b1247f9a-a469-4493-9ff0-321bbca14255",
+      "name": "Get row(s) in sheet in Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "zINVY74q8LWtLgp0",
+          "name": "Google Sheets account 3"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get row(s) in sheet in Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8ab29d2f-8014-4265-9fcd-4115d42e40f2",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "f279b7f9e2a4d152a1767bca5de57e3a2319e51cc8e58ff5235ea8f63d93868e"
+  },
+  "nodeGroups": [],
+  "id": "ulzKJTslonylcDPo",
+  "tags": []
+}
